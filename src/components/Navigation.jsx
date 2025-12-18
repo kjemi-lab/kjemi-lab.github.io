@@ -6,7 +6,8 @@ const Navigation = ({ activeTab, onTabChange }) => {
   const tabs = [
     { id: 'home', label: 'Hjem' },
     { id: 'periodic-table', label: 'Periodisk Tabell' },
-    { id: 'element-builder', label: 'Grunnstoff-bygger' }
+    { id: 'element-builder', label: 'Grunnstoff-bygger' },
+    { id: 'molecule-builder', label: 'Molecule Builder' }
   ];
 
   return (

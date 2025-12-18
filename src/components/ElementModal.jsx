@@ -161,6 +161,9 @@ const ElementModal = ({ element, onClose }) => {
                       electrons={element.electrons}
                     />
                   </div>
+                  <p className="text-sm text-gray-400 text-center mt-3">
+                    Dra med musen for å rotere, bruk hjul for å zoome
+                  </p>
                 </div>
 
                 {/* Description */}

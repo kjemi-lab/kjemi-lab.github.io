@@ -43,28 +43,26 @@ const Atom3D = ({ protons, neutrons, electrons }) => {
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
-    // Camera setup with better positioning
+    // Camera setup
     const camera = new THREE.PerspectiveCamera(
-      60, // Reduced FOV for better perspective
+      60,
       mountRef.current.clientWidth / mountRef.current.clientHeight,
       0.1,
       1000
     );
     camera.position.set(0, 0, 5);
 
-    // Renderer setup with better quality
+    // Renderer setup
     const renderer = new THREE.WebGLRenderer({ 
       alpha: true, 
-      antialias: true,
-      powerPreference: "high-performance"
+      antialias: true
     });
     renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
     renderer.setClearColor(0x000000, 0);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Better quality on high-DPI displays
     mountRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Enhanced lighting
+    // Lighting
     const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
     scene.add(ambientLight);
 
@@ -72,20 +70,14 @@ const Atom3D = ({ protons, neutrons, electrons }) => {
     pointLight.position.set(10, 10, 10);
     scene.add(pointLight);
 
-    // Add subtle blue light for depth
-    const blueLight = new THREE.PointLight(0x4444ff, 0.3, 50);
-    blueLight.position.set(-5, -5, -5);
-    scene.add(blueLight);
-
-    // Main group for the entire atom (nucleus + electron shells)
+    // Main group
     const atomGroup = new THREE.Group();
     scene.add(atomGroup);
 
-    // Nucleus (protons and neutrons) with better distribution
+    // Nucleus
     const nucleusGroup = new THREE.Group();
     const nucleusRadius = Math.max(0.25, Math.sqrt(protons + neutrons) * 0.06);
     
-    // Add protons with better spacing
     for (let i = 0; i < protons; i++) {
       const proton = new THREE.Mesh(geometries.sphere, materials.proton);
       const angle = Math.random() * Math.PI * 2;
@@ -100,7 +92,6 @@ const Atom3D = ({ protons, neutrons, electrons }) => {
       nucleusGroup.add(proton);
     }
 
-    // Add neutrons with better spacing
     for (let i = 0; i < neutrons; i++) {
       const neutron = new THREE.Mesh(geometries.sphere, materials.neutron);
       const angle = Math.random() * Math.PI * 2;
@@ -117,129 +108,67 @@ const Atom3D = ({ protons, neutrons, electrons }) => {
 
     atomGroup.add(nucleusGroup);
 
-    // Electron shells with improved 3D distribution
-    const electronShells = [];
+    // ELECTRONS AND ORBITS
+    const electronsData = [];
     let remainingElectrons = electrons;
     let shellNumber = 1;
-    
+
     while (remainingElectrons > 0) {
       const electronsInShell = Math.min(2 * shellNumber * shellNumber, remainingElectrons);
       const shellRadius = shellNumber * 1.0;
-      
-      // Create orbit rings based on actual electron count
-      const numOrbits = Math.min(4, Math.max(1, Math.ceil(electronsInShell / 2))); // Only create orbits that will be used
-      
+      const numOrbits = Math.min(4, Math.max(1, Math.ceil(electronsInShell / 2)));
+
       for (let orbitIndex = 0; orbitIndex < numOrbits; orbitIndex++) {
-        const orbit = new THREE.Mesh(geometries.torus, materials.orbit);
-        
-        // Different orientations for each orbit to create 3D effect
-        let orbitRotationX, orbitRotationY, orbitRotationZ;
-        
-        switch (orbitIndex) {
-          case 0: // North-South (standard horizontal ring)
-            orbitRotationX = Math.PI / 2;
-            orbitRotationY = 0;
-            orbitRotationZ = 0;
-            break;
-          case 1: // East-West (vertical ring)
-            orbitRotationX = 0;
-            orbitRotationY = 0;
-            orbitRotationZ = Math.PI / 2;
-            break;
-          case 2: // Diagonal 1 (tilted ring)
-            orbitRotationX = Math.PI / 2;
-            orbitRotationY = Math.PI / 4;
-            orbitRotationZ = 0;
-            break;
-          case 3: // Diagonal 2 (opposite tilted ring)
-            orbitRotationX = Math.PI / 2;
-            orbitRotationY = -Math.PI / 4;
-            orbitRotationZ = Math.PI / 6;
-            break;
+        const electronsOnThisOrbit = Math.ceil(electronsInShell / numOrbits);
+        const electronsToAdd = Math.min(electronsOnThisOrbit, electrons - electronsData.length);
+
+        if (electronsToAdd > 0) {
+          const orbit = new THREE.Mesh(geometries.torus, materials.orbit);
+          const orbitGroup = new THREE.Group();
+          
+          // Apply rotation to the GROUP, not the mesh
+          if (orbitIndex === 0) { // Horizontal XZ plane
+            orbitGroup.rotation.x = Math.PI / 2;
+          } else if (orbitIndex === 1) { // Vertical YZ plane
+            orbitGroup.rotation.y = Math.PI / 2;
+          } else if (orbitIndex === 2) { // Diagonal
+            orbitGroup.rotation.x = Math.PI / 2;
+            orbitGroup.rotation.y = Math.PI / 4;
+          } else { // Other Diagonal
+            orbitGroup.rotation.x = Math.PI / 2;
+            orbitGroup.rotation.y = -Math.PI / 4;
+          }
+          
+          orbitGroup.add(orbit);
+
+          const radius = shellRadius + (orbitIndex * 0.05);
+          orbit.scale.setScalar(radius);
+          atomGroup.add(orbitGroup);
+
+          for (let i = 0; i < electronsToAdd; i++) {
+            const electron = new THREE.Mesh(geometries.sphere, materials.electron);
+            atomGroup.add(electron);
+
+            electronsData.push({
+              mesh: electron,
+              radius: radius,
+              angle: Math.random() * Math.PI * 2,
+              speed: 0.005, // Slower and constant speed
+              orbitGroup: orbitGroup,
+            });
+          }
         }
-        
-        orbit.rotation.set(orbitRotationX, orbitRotationY, orbitRotationZ);
-        
-        // Slightly different sizes and positions for each orbit
-        const orbitScale = shellRadius + (orbitIndex * 0.05);
-        orbit.scale.setScalar(orbitScale);
-        
-        // Adjust opacity based on orbit type
-        orbit.material.opacity = 0.4 - (orbitIndex * 0.05);
-        
-        atomGroup.add(orbit);
       }
-      
-      // Add electrons to this shell with enhanced 3D distribution
-      for (let i = 0; i < electronsInShell; i++) {
-        const electron = new THREE.Mesh(geometries.sphere, materials.electron);
-        
-        // Distribute electrons evenly across available orbits
-        const orbitIndex = i % numOrbits;
-        
-        // Create circular distribution around the orbit
-        const angle = (i / electronsInShell) * Math.PI * 2;
-        const radiusVariation = shellRadius + (orbitIndex * 0.05);
-        
-        // Position electrons on their respective orbital paths
-        let electronX, electronY, electronZ;
-        
-        switch (orbitIndex) {
-          case 0: // North-South orbit (horizontal)
-            electronX = radiusVariation * Math.cos(angle);
-            electronY = 0; // Stay on the horizontal plane
-            electronZ = radiusVariation * Math.sin(angle);
-            break;
-          case 1: // East-West orbit (vertical)
-            electronX = radiusVariation * Math.cos(angle);
-            electronY = radiusVariation * Math.sin(angle);
-            electronZ = 0; // Stay on the vertical plane
-            break;
-          case 2: // Diagonal 1 orbit
-            electronX = radiusVariation * Math.cos(angle) * 0.7;
-            electronY = radiusVariation * Math.sin(angle) * 0.7;
-            electronZ = radiusVariation * Math.sin(angle) * 0.7;
-            break;
-          case 3: // Diagonal 2 orbit
-            electronX = radiusVariation * Math.cos(angle) * 0.7;
-            electronY = radiusVariation * Math.sin(angle) * 0.7;
-            electronZ = radiusVariation * Math.cos(angle) * 0.7;
-            break;
-          default:
-            // Fallback to North-South orbit
-            electronX = radiusVariation * Math.cos(angle);
-            electronY = 0;
-            electronZ = radiusVariation * Math.sin(angle);
-        }
-        
-        electron.position.set(electronX, electronY, electronZ);
-        
-        // Enhanced animation data
-        electron.userData = { 
-          orbitIndex: orbitIndex,
-          shellRadius: radiusVariation, 
-          angle: angle, 
-          speed: 0.015 / shellNumber, // Slower for outer shells
-          // Add individual timing offsets for varied movement
-          timeOffset: Math.random() * Math.PI * 2
-        };
-        
-        atomGroup.add(electron);
-        electronShells.push(electron);
-      }
-      
       remainingElectrons -= electronsInShell;
       shellNumber++;
     }
 
-    // Mouse controls with improved responsiveness
+    // Mouse controls
     let isMouseDown = false;
     let mouseX = 0;
     let mouseY = 0;
     let rotationX = 0;
     let rotationY = 0;
-    let targetRotationX = 0;
-    let targetRotationY = 0;
 
     const handleMouseDown = (event) => {
       isMouseDown = true;
@@ -253,11 +182,8 @@ const Atom3D = ({ protons, neutrons, electrons }) => {
       const deltaX = event.clientX - mouseX;
       const deltaY = event.clientY - mouseY;
       
-      targetRotationY += deltaX * 0.008;
-      targetRotationX += deltaY * 0.008;
-      
-      // Limit vertical rotation
-      targetRotationX = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, targetRotationX));
+      rotationY += deltaX * 0.01;
+      rotationX += deltaY * 0.01;
       
       mouseX = event.clientX;
       mouseY = event.clientY;
@@ -274,82 +200,44 @@ const Atom3D = ({ protons, neutrons, electrons }) => {
       camera.position.clampLength(3, 10);
     };
 
-    // Add event listeners
     renderer.domElement.addEventListener('mousedown', handleMouseDown);
     renderer.domElement.addEventListener('mousemove', handleMouseMove);
     renderer.domElement.addEventListener('mouseup', handleMouseUp);
     renderer.domElement.addEventListener('wheel', handleWheel);
 
-    // Smooth rotation interpolation
-    const lerpFactor = 0.05;
-
-    // Animation loop with improved performance
+    // ANIMATION
     const animate = () => {
       animationIdRef.current = requestAnimationFrame(animate);
-      
-      // Smooth rotation interpolation
-      rotationX += (targetRotationX - rotationX) * lerpFactor;
-      rotationY += (targetRotationY - rotationY) * lerpFactor;
-      
-      // Apply smooth rotation to the entire atom
+
+      // Apply mouse rotation to entire atom
       atomGroup.rotation.x = rotationX;
       atomGroup.rotation.y = rotationY;
-      
-      // Rotate nucleus slowly
+
+      // Rotate nucleus
       nucleusGroup.rotation.y += 0.002;
-      
-      // Enhanced electron animations - electrons follow their orbital paths
-      electronShells.forEach((electron, index) => {
-        const { orbitIndex, shellRadius, speed, timeOffset } = electron.userData;
-        electron.userData.angle += speed;
-        
-        // Simple circular movement around the orbit
-        const time = electron.userData.angle + timeOffset;
-        const radiusVariation = shellRadius;
-        
-        let newX, newY, newZ;
-        
-        // Ensure orbitIndex is valid and electrons stay on their paths
-        const validOrbitIndex = orbitIndex % 4;
-        
-        switch (validOrbitIndex) {
-          case 0: // North-South orbit (horizontal)
-            newX = radiusVariation * Math.cos(time);
-            newY = 0; // Stay on horizontal plane
-            newZ = radiusVariation * Math.sin(time);
-            break;
-          case 1: // East-West orbit (vertical)
-            newX = radiusVariation * Math.cos(time);
-            newY = radiusVariation * Math.sin(time);
-            newZ = 0; // Stay on vertical plane
-            break;
-          case 2: // Diagonal 1 orbit
-            newX = radiusVariation * Math.cos(time) * 0.7;
-            newY = radiusVariation * Math.sin(time) * 0.7;
-            newZ = radiusVariation * Math.sin(time) * 0.7;
-            break;
-          case 3: // Diagonal 2 orbit
-            newX = radiusVariation * Math.cos(time) * 0.7;
-            newY = radiusVariation * Math.sin(time) * 0.7;
-            newZ = radiusVariation * Math.cos(time) * 0.7;
-            break;
-          default:
-            // Fallback to North-South orbit
-            newX = radiusVariation * Math.cos(time);
-            newY = 0;
-            newZ = radiusVariation * Math.sin(time);
-        }
-        
-        // Update electron position with smooth interpolation
-        electron.position.lerp(new THREE.Vector3(newX, newY, newZ), 0.1);
+
+      // Animate electrons along their orbital paths
+      electronsData.forEach(data => {
+        data.angle += data.speed;
+
+        // Calculate position in XY plane first
+        const position = new THREE.Vector3(
+          data.radius * Math.cos(data.angle),
+          data.radius * Math.sin(data.angle),
+          0
+        );
+
+        // Then apply the orbit's rotation
+        position.applyEuler(data.orbitGroup.rotation);
+        data.mesh.position.copy(position);
       });
-      
+
       renderer.render(scene, camera);
     };
 
     animate();
 
-    // Handle resize with better performance
+    // Handle resize
     const handleResize = () => {
       if (!mountRef.current || !renderer) return;
       
@@ -363,7 +251,7 @@ const Atom3D = ({ protons, neutrons, electrons }) => {
 
     window.addEventListener('resize', handleResize);
 
-    // Cleanup function
+    // Cleanup
     return () => {
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
@@ -379,7 +267,6 @@ const Atom3D = ({ protons, neutrons, electrons }) => {
       renderer.domElement.removeEventListener('mouseup', handleMouseUp);
       renderer.domElement.removeEventListener('wheel', handleWheel);
       
-      // Dispose of geometries and materials
       Object.values(geometries).forEach(geometry => geometry.dispose());
       Object.values(materials).forEach(material => material.dispose());
       

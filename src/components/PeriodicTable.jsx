@@ -40,6 +40,12 @@ const PeriodicTable = () => {
   }, [searchTerm, selectedCategory]);
 
   const getGridPosition = (element) => {
+    if (element.atomic_number >= 57 && element.atomic_number <= 71) { // Lanthanides
+      return { gridColumn: (element.atomic_number - 57) + 4, gridRow: 9 };
+    }
+    if (element.atomic_number >= 89 && element.atomic_number <= 103) { // Actinides
+      return { gridColumn: (element.atomic_number - 89) + 4, gridRow: 10 };
+    }
     return {
       gridColumn: element.group,
       gridRow: element.period
@@ -119,7 +125,7 @@ const PeriodicTable = () => {
           className="grid gap-0.5 mx-auto"
           style={{
             gridTemplateColumns: 'repeat(18, minmax(45px, 1fr))',
-            gridTemplateRows: 'repeat(7, minmax(45px, 1fr))',
+            gridTemplateRows: 'repeat(10, minmax(45px, 1fr))',
             minWidth: 'max-content'
           }}
         >

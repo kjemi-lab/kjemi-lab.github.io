@@ -269,7 +269,7 @@ const ElementBuilder = () => {
           </div>
         </motion.div>
 
-        {/* Right column - 3D visualization */}
+        {/* Right column - Visualization */}
         <motion.div 
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
