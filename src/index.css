@@ -189,4 +189,14 @@
   .shadow-glow {
     box-shadow: 0 0 10px #9f55ff, 0 0 20px #9f55ff, 0 0 30px #9f55ff;
   }
+
+  /* SVG molecule text colors for dark mode */
+  html:not(.light) svg text {
+    fill: #ffffff !important;
+  }
+
+  /* Keep black text in light mode */
+  html.light svg text {
+    fill: #000000 !important;
+  }
 }
