@@ -142,7 +142,7 @@
 
 @layer components {
   .element-card {
-    @apply bg-surface border border-primary/20 rounded-lg p-1 cursor-pointer transition-all duration-300 hover:scale-105 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/20;
+    @apply bg-surface rounded-lg p-1 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg;
     min-height: 45px;
     display: flex;
     flex-direction: column;

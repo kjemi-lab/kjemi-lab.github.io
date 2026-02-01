@@ -191,7 +191,7 @@ const PeriodicTable = ({ onElementSelect }) => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
               style={getGridPosition(element)}
-              className={`element-card ${categoryColors[element.category]}/50 border-2 ${categoryColors[element.category]}/50 cursor-pointer relative ${
+              className={`element-card border-2 ${categoryColors[element.category]} ${categoryColors[element.category]}/20 cursor-pointer relative ${
                 isFavorite(element.atomic_number) ? 'ring-2 ring-neon-yellow' : ''
               }`}
               onClick={() => {
