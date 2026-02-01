@@ -42,6 +42,7 @@ const Molecule2D = ({ smiles, width = 200, height = 200, className = '' }) => {
             addStereoAnnotation: true,
             explicitMethyl: false,
             symbolColour: theme === 'light' ? [0, 0, 0] : [0.9, 0.9, 0.9],
+            bondColour: theme === 'light' ? [0, 0, 0] : [0.9, 0.9, 0.9],
             centreMoleculesBeforeDrawing: true,
             fixedBondLength: 45,
           };
