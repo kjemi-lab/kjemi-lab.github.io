@@ -37,7 +37,7 @@ const Molecule2D = ({ smiles, width = 200, height = 200, className = '' }) => {
           const details = {
             width: Math.round(width),
             height: Math.round(height),
-            backgroundColour: theme === 'light' ? [0.95, 0.96, 0.97] : [0.05, 0.05, 0.1],
+            backgroundColour: theme === 'light' ? [0.95, 0.96, 0.97] : [0.23, 0.17, 0.29],
             bondLineWidth: 2.5,
             addStereoAnnotation: true,
             explicitMethyl: false,
