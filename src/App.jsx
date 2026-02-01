@@ -6,7 +6,7 @@ import Navigation from './components/Navigation';
 import Home from './components/Home';
 import PeriodicTable from './components/PeriodicTable';
 import ElementBuilder from './components/ElementBuilder';
-import MoleculeBuilder from './components/MoleculeBuilder';
+import Molecules from './components/Molecules';
 import ElementModal from './components/ElementModal';
 import { elements } from './data/elements';
 
@@ -72,6 +72,12 @@ function App() {
         e.preventDefault();
         setActiveTab('element-builder');
       }
+
+      // '4' - Molecules
+      if (e.key === '4' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setActiveTab('molecules');
+      }
     };
 
     window.addEventListener('keydown', handleKeyPress);
@@ -86,8 +92,8 @@ function App() {
         return <PeriodicTable onElementSelect={setSelectedElement} />;
       case 'element-builder':
         return <ElementBuilder />;
-      case 'molecule-builder':
-        return <MoleculeBuilder />;
+      case 'molecules':
+        return <Molecules />;
       default:
         return <Home onTabChange={setActiveTab} />;
     }

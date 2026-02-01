@@ -12,7 +12,7 @@ const Navigation = ({ activeTab, onTabChange }) => {
     { id: 'home', labelKey: 'home' },
     { id: 'periodic-table', labelKey: 'periodicTable' },
     { id: 'element-builder', labelKey: 'elementBuilder' },
-    { id: 'molecule-builder', labelKey: 'moleculeBuilder' }
+    { id: 'molecules', labelKey: 'molecules' }
   ];
 
   return (

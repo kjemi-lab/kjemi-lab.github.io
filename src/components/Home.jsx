@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Atom, Zap, Target, Users } from 'lucide-react';
+import { Atom, Zap, Target, Users, FlaskConical } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Home = ({ onTabChange }) => {
@@ -18,12 +18,18 @@ const Home = ({ onTabChange }) => {
       titleKey: "elementBuilder",
       descriptionKey: "elementBuilderDesc",
       tab: "element-builder"
+    },
+    {
+      icon: FlaskConical,
+      titleKey: "molecules",
+      descriptionKey: "moleculesDesc",
+      tab: "molecules"
     }
   ];
 
   const stats = [
     { number: "118", labelKey: "elements" },
-    { number: "10", labelKey: "categories" },
+    { number: "200", labelKey: "molecules" },
     { number: "3D", labelKey: "atomModels" },
     { number: "100%", labelKey: "norwegian" }
   ];
