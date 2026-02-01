@@ -3,16 +3,6 @@ import SmilesDrawer from 'smiles-drawer';
 import { useTheme } from '../contexts/ThemeContext';
 import { useRDKit } from '../contexts/RDKitContext';
 
-// Lærebok-stil: rød karbonskelett, svart heteroatomer (O, N, H) på lys grå bakgrunn
-const THEME_COLORS = {
-  dark: {
-    background: [0.1, 0.1, 0.17],
-  },
-  light: {
-    background: [0.95, 0.96, 0.97],
-  },
-};
-
 const Molecule2D = ({ smiles, width = 200, height = 200, className = '' }) => {
   const containerRef = useRef(null);
   const [error, setError] = useState(null);
@@ -20,108 +10,137 @@ const Molecule2D = ({ smiles, width = 200, height = 200, className = '' }) => {
   const { rdkit } = useRDKit();
 
   useEffect(() => {
-    if (!smiles || !containerRef.current) return;
+    const smilesStr = typeof smiles === 'string' ? smiles.trim() : '';
+    if (!smilesStr || !containerRef.current) return;
 
     setError(null);
+    containerRef.current.innerHTML = '';
 
-    // RDKit: korrekt stereokjemi, wedge/dashed bonds, eksplisitte H
-    if (rdkit) {
-      try {
-        const mol = rdkit.get_mol(smiles);
-        if (mol) {
-          const colors = THEME_COLORS[theme] || THEME_COLORS.light;
+    const drawMolecule = async () => {
+      // RDKit: korrekt stereokjemi, wedge/dashed bonds
+      if (rdkit) {
+        try {
+          console.log('🔬 Tegner med RDKit:', smilesStr);
+          // Parse SMILES med RDKit
+          const mol = rdkit.get_mol(smilesStr);
+          if (!mol) {
+            throw new Error('Ugyldig SMILES-kode');
+          }
+
+          try {
+            // Regenerer 2D-koordinater
+            mol.get_new_coords();
+          } catch (_) {
+            // Fortsett selv om det feiler
+          }
+
           const details = {
             width: Math.round(width),
             height: Math.round(height),
-            backgroundColour: colors.background,
-            bondLineWidth: 2,
+            backgroundColour: theme === 'light' ? [0.95, 0.96, 0.97] : [0.1, 0.1, 0.17],
+            bondLineWidth: 2.5,
             addStereoAnnotation: true,
-            explicitMethyl: true,
+            explicitMethyl: false,
             symbolColour: theme === 'light' ? [0, 0, 0] : [0.9, 0.9, 0.9],
+            centreMoleculesBeforeDrawing: true,
+            fixedBondLength: 45,
           };
+
           const svgStr = mol.get_svg_with_highlights(JSON.stringify(details));
           mol.delete();
+          
           if (svgStr && containerRef.current) {
+            console.log('✅ RDKit tegning vellykket');
             containerRef.current.innerHTML = svgStr;
             const svg = containerRef.current.querySelector('svg');
             if (svg) {
-              svg.setAttribute('class', 'molecule-2d-svg');
               svg.style.maxWidth = '100%';
               svg.style.height = 'auto';
-              if (theme === 'light') {
-                svg.querySelectorAll('path, line').forEach((el) => {
-                  const stroke = el.getAttribute('stroke');
-                  if (stroke && stroke !== 'none') {
-                    el.setAttribute('stroke', '#c62828');
-                  }
-                });
-                svg.querySelectorAll('text').forEach((el) => {
-                  el.setAttribute('fill', '#000');
-                });
-              }
             }
+            return;
           }
+        } catch (err) {
+          console.warn('⚠️ RDKit feilet:', err.message);
         }
-      } catch (err) {
-        setError(err?.message || 'Kunne ikke tegne molekylet');
-        if (containerRef.current) containerRef.current.innerHTML = '';
+      } else {
+        console.log('ℹ️ RDKit ikke tilgjengelig, bruker SmilesDrawer');
       }
-      return;
-    }
 
-    // Fallback: smiles-drawer
-    const themeName = theme === 'dark' ? 'kjemi-dark' : 'kjemi-light';
-    const options = {
-      width,
-      height,
-      bondThickness: 1.5,
-      bondLength: 25,
-      shortBondLength: 0.85,
-      bondSpacing: 5,
-      terminalCarbons: false,
-      explicitHydrogens: true,
-      fontSizeLarge: 12,
-      fontSizeSmall: 8,
-      padding: 15,
-      compactDrawing: true,
-      isomeric: true,
-      themes: {
-        'kjemi-dark': {
-          C: '#a0a0a0', O: '#b366ff', N: '#b366ff', H: '#888888',
-          F: '#9f55ff', CL: '#9f55ff', BR: '#9f55ff', I: '#9f55ff',
-          P: '#b366ff', S: '#b366ff', B: '#a0a0a0', SI: '#a0a0a0',
-          BACKGROUND: '#1A1A2B',
+      // Fallback: SmilesDrawer
+      const themeName = theme === 'dark' ? 'kjemi-dark' : 'kjemi-light';
+      const options = {
+        width,
+        height,
+        bondThickness: 2,
+        bondLength: 35,
+        shortBondLength: 0.85,
+        bondSpacing: 6,
+        terminalCarbons: false,
+        explicitHydrogens: false,
+        fontSizeLarge: 14,
+        fontSizeSmall: 10,
+        padding: 25,
+        compactDrawing: false,
+        isomeric: true,
+        themes: {
+          'kjemi-dark': {
+            C: '#a0a0a0', O: '#ff6666', N: '#ff9999', H: '#888888',
+            F: '#99ff99', CL: '#99ff99', BR: '#99ff99', I: '#99ff99',
+            P: '#ffcc99', S: '#ffff99', B: '#a0a0a0', SI: '#a0a0a0',
+            BACKGROUND: '#1A1A2B',
+          },
+          'kjemi-light': {
+            C: '#c62828', O: '#c62828', N: '#c62828', H: '#000',
+            F: '#000', CL: '#000', BR: '#000', I: '#000',
+            P: '#c62828', S: '#c62828', B: '#c62828', SI: '#000',
+            BACKGROUND: '#ffffff',
+          },
         },
-        'kjemi-light': {
-          C: '#222', O: '#222', N: '#222', H: '#333',
-          F: '#222', CL: '#222', BR: '#222', I: '#222',
-          P: '#222', S: '#222', B: '#222', SI: '#222',
-          BACKGROUND: '#ffffff',
-        },
-      },
+      };
+
+      try {
+        return new Promise((resolve) => {
+          const smiDrawer = new SmilesDrawer.SmiDrawer(options, {});
+          smiDrawer.draw(smilesStr, null, themeName, 
+            (svg) => {
+              if (svg && containerRef.current) {
+                containerRef.current.innerHTML = '';
+                containerRef.current.appendChild(svg);
+                svg.style.maxWidth = '100%';
+                svg.style.height = 'auto';
+              }
+              resolve(true);
+            }, 
+            (err) => {
+              // Fallback uten stereo
+              console.warn('Tegning med stereo feilet, prøver uten:', err);
+              const simplifiedSmiles = smilesStr.replace(/@+/g, '');
+              const smiDrawer2 = new SmilesDrawer.SmiDrawer(options, {});
+              smiDrawer2.draw(simplifiedSmiles, null, themeName,
+                (svg2) => {
+                  if (svg2 && containerRef.current) {
+                    containerRef.current.innerHTML = '';
+                    containerRef.current.appendChild(svg2);
+                    svg2.style.maxWidth = '100%';
+                    svg2.style.height = 'auto';
+                  }
+                  resolve(true);
+                },
+                (err2) => {
+                  setError('Kunne ikke tegne');
+                  resolve(false);
+                }
+              );
+            }
+          );
+        });
+      } catch (err) {
+        setError('Feil ved tegning');
+        console.error(err);
+      }
     };
 
-    try {
-      const cleanedSmiles = SmilesDrawer.clean ? SmilesDrawer.clean(smiles) : smiles;
-      const smiDrawer = new SmilesDrawer.SmiDrawer(options, {});
-
-      smiDrawer.draw(cleanedSmiles, null, themeName, (svg) => {
-        setError(null);
-        if (svg && containerRef.current) {
-          containerRef.current.innerHTML = '';
-          containerRef.current.appendChild(svg);
-          svg.setAttribute('class', 'molecule-2d-svg');
-          svg.style.maxWidth = '100%';
-          svg.style.height = 'auto';
-        }
-      }, (err) => {
-        setError(err?.message || 'Kunne ikke tegne molekylet');
-        if (containerRef.current) containerRef.current.innerHTML = '';
-      });
-    } catch (err) {
-      setError(err?.message || 'Kunne ikke tegne molekylet');
-      if (containerRef.current) containerRef.current.innerHTML = '';
-    }
+    drawMolecule();
   }, [smiles, width, height, theme, rdkit]);
 
   if (error) {

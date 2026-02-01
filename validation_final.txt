@@ -1,0 +1,12 @@
+Valid: 253/255
+Errors: 2/255
+
+REMAINING ERRORS:
+57. Kobalamin (B12)
+   Expected: C63H88CoN14O14P
+   Got: C14H21CoN5O8P-
+
+177. Koensym Q10
+   Expected: C59H90O4
+   Got: C43H58O3
+

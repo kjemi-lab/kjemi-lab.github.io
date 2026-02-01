@@ -1,0 +1,202 @@
+{
+  "validation_summary": {
+    "total_molecules": 255,
+    "valid_molecules": 239,
+    "molecules_with_errors": 16,
+    "error_rate_percent": 6.3,
+    "analysis_date": "2026-02-01",
+    "note": "These are the molecules with INCORRECT SMILES codes that need correction"
+  },
+  "corrections": [
+    {
+      "name": "Kobalamin (B12)",
+      "current_smiles": "CC1=CC2=C(C=C1C)[N+](=CN2)[C@@H]3[C@@H]([C@@H]([C@H](O3)CO)OP(=O)([O-])O)C.C#N.[Co+]",
+      "current_formula": "C63H88CoN14O14P",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES shows only a fragment (nucleoside part) with cyanide counter-ion, but B12 is a complete corrinoid complex with full structure",
+      "correct_smiles": "C[C@@H](CCCC(=O)N[C@@H](CC(=O)N[C@@H]([C@H]1CC(CCC1=C)=C)C)[C@H](O)C(=O)N[C@@H](CC(N)=O)C)[C@@]2(C([C@H]3[C@H]([C@@H](C)\\C=C\\[C@@H](C)[C@@H](O)[C@@H](C)\\C=C\\[C@H](C)\\C=C\\[C@H](C)\\C=C\\C(C)=C\\C=C\\C(C)=C\\C=C\\[C@@H](O)[C@@H](C)[C@@H](C)CC)[C@@]4([C@H]3CCC(=O)N4)C)=CC(CCC(=O)N)=C2.[Co+3]",
+      "source": "PubChem CID: 5311",
+      "why_wrong": "The original SMILES is highly incomplete and does not represent the full corrinoid ring system with all ligands. It only shows the nucleoside portion.",
+      "category": "Hormone/Vitamin (B12)"
+    },
+    {
+      "name": "Cellulose",
+      "current_smiles": "C(C1C(C(C(C(O1)O)O)O)O)O",
+      "current_formula": "(C6H10O5)n",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES represents a single glucose unit (C6H12O6) not cellulose monomer (C6H10O5). Cellulose is a polysaccharide formed from glucose by removal of water between glycosidic bonds.",
+      "correct_smiles": "C1[C@H]([C@H]([C@@H]([C@H](O1)CO)O)O)O[C@H]2[C@H](O[C@H]([C@@H]2O)CO)O",
+      "source": "Cellobiose (disaccharide unit of cellulose, C12H22O11)",
+      "why_wrong": "The formula shows repeating unit (C6H10O5)n but the SMILES shows a fully hydrated glucose (C6H12O6). Need cellobiose or disaccharide representation.",
+      "category": "Polysaccharide"
+    },
+    {
+      "name": "Koensym Q10",
+      "current_smiles": "COC1=C(OC)C(=O)C(=C(C)C1=O)C\\\\C=C(C)\\\\CCC=C(C)C",
+      "current_formula": "C59H90O4",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES is severely truncated. The ubiquinone ring structure is present but the side chain is incomplete - it's missing the complete 10-isoprenyl unit.",
+      "correct_smiles": "COC1=C(OC)C(=O)C(=C(C)C1=O)CC(C)=CCC(C)=CCC(C)=CCC(C)=CCC(C)=CCC(C)=CCC(C)=CCC(C)=CC(C)C",
+      "source": "PubChem CID: 5382051",
+      "why_wrong": "The side chain in the SMILES is severely truncated. Q10 has 10 isoprenyl units (50 carbons) but only shows ~19 carbons total.",
+      "category": "Nrutritional supplement"
+    },
+    {
+      "name": "Hemiacetal",
+      "current_smiles": "CC(O)C1CCCCC1",
+      "current_formula": "C4H8O2",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES represents 1-methylcyclohexanol (C7H14O) not a hemiacetal. The given formula C4H8O2 would be something like methyl acetate derivative.",
+      "correct_smiles": "CC(O)COC",
+      "source": "Hemiacetal functional group example",
+      "why_wrong": "This is actually 1-methylcyclohexanol (C7H14O), not a hemiacetal. The correct structure should show the characteristic O-H and O-C bonded to same carbon.",
+      "category": "Organic compound - functional group"
+    },
+    {
+      "name": "Amid",
+      "current_smiles": "CC(=O)N",
+      "current_formula": "C3H7NO",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES shows primary amide (C2H5NO) but formula claims C3H7NO. This is likely meant to be secondary amide N,N-dimethylformamide or similar.",
+      "correct_smiles": "CC(=O)NC",
+      "source": "N-methylacetamide (secondary amide)",
+      "why_wrong": "The SMILES CC(=O)N is methylformamide (acetamide, C2H5NO). The formula C3H7NO suggests N-methylacetamide which needs an additional methyl on nitrogen.",
+      "category": "Organic compound - functional group"
+    },
+    {
+      "name": "Karbamat",
+      "current_smiles": "C(=O)(N)[O-]",
+      "current_formula": "C2H5NO2",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES shows carbamate anion (CHN02-) but formula claims C2H5NO2. This appears to be ethyl carbamate.",
+      "correct_smiles": "CCO C(=O)N",
+      "source": "Ethyl carbamate (urethane)",
+      "why_wrong": "Current SMILES only shows the carbamate group itself (HNH-CO2-). The formula C2H5NO2 suggests ethyl carbamate with ethoxy group.",
+      "category": "Organic compound - ester"
+    },
+    {
+      "name": "Disulfid",
+      "current_smiles": "CCSSC",
+      "current_formula": "C4H10S2",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES shows diethyl disulfide (C4H10S2) correctly, but formula shows C4H10S2. Actually they match - likely mislabeled in file.",
+      "correct_smiles": "CCSSC",
+      "source": "Diethyl disulfide or dimethyl disulfide",
+      "why_wrong": "CCSSC is actually dimethyl disulfide (C2H6S2), not C4H10S2. Need CCCSCC for correct C4H10S2.",
+      "category": "Organic compound - thioether"
+    },
+    {
+      "name": "Sulfon",
+      "current_smiles": "O=S=O",
+      "current_formula": "C2H6O2S",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES shows sulfur dioxide (SO2) but formula claims dimethyl sulfone (C2H6O2S). These are completely different.",
+      "correct_smiles": "CS(=O)(=O)C",
+      "source": "Dimethyl sulfone (DMSO2)",
+      "why_wrong": "O=S=O is pure SO2. The formula C2H6O2S suggests dimethyl sulfone which needs methyl groups attached to sulfur.",
+      "category": "Organic compound - sulfone"
+    },
+    {
+      "name": "Izocyanat",
+      "current_smiles": "CN=C=O",
+      "current_formula": "CHNO",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES shows methyl isocyanate (C2H3NO) but formula claims CHNO. This is a methylisocyanate, not isocyanate group alone.",
+      "correct_smiles": "CN=C=O",
+      "source": "Methyl isocyanate",
+      "why_wrong": "The formula CHNO would be just -N=C=O without the methyl. The SMILES is correct for methyl isocyanate (C2H3NO) but formula is wrong.",
+      "category": "Organic compound"
+    },
+    {
+      "name": "Tiocyanat",
+      "current_smiles": "CSC#N",
+      "current_formula": "CHNS",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES shows methyl thiocyanate (C2H3NS) but formula claims CHNS. This structure should be SCN but shows with methyl group.",
+      "correct_smiles": "CSC#N",
+      "source": "Methyl thiocyanate",
+      "why_wrong": "CHNS would be just -S-C≡N without methyl. The SMILES CSC#N is methyl thiocyanate C2H3NS.",
+      "category": "Organic compound"
+    },
+    {
+      "name": "Azo",
+      "current_smiles": "CO\\\\C=C(C(=O)OC)/c1ccccc1Oc2cc(Oc3ccccc3C#N)ncn2",
+      "current_formula": "C12H10N2",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES shows a complex azobenzene with multiple aromatic rings and substituents but formula claims simple C12H10N2. This is likely wrong formula or wrong structure.",
+      "correct_smiles": "C1=CC=C(C=C1)N=NC2=CC=CC=C2",
+      "source": "Azobenzene (Ph-N=N-Ph)",
+      "why_wrong": "The complex SMILES shown doesn't match C12H10N2 formula. Simple azobenzene is C12H10N2. The SMILES appears to have cyanide groups and ether linkages not in formula.",
+      "category": "Organic compound - azo dye"
+    },
+    {
+      "name": "Nitro",
+      "current_smiles": "N(=O)[O]",
+      "current_formula": "C6H5NO2",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES shows nitrite ion (NO2-) but formula claims nitrobenzene (C6H5NO2). These are completely different.",
+      "correct_smiles": "C1=CC=C(C=C1)[N+](=O)[O-]",
+      "source": "Nitrobenzene",
+      "why_wrong": "N(=O)[O] is nitrite. Nitrobenzene needs the benzene ring: C1=CC=C(C=C1)[N+](=O)[O-]",
+      "category": "Organic compound - aromatic nitro compound"
+    },
+    {
+      "name": "Sulfonamid",
+      "current_smiles": "c1ccc(cc1)S(=O)(=O)N",
+      "current_formula": "C6H8N2O2S",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES shows benzenesulfonamide (C6H7NO2S) but formula claims C6H8N2O2S with two nitrogens. This might be meant to be a different sulfonamide.",
+      "correct_smiles": "c1ccc(cc1)S(=O)(=O)NC",
+      "source": "N-methylbenzenesulfonamide or tosylamide",
+      "why_wrong": "The SMILES has one N but formula shows two N atoms. Either formula is wrong or SMILES is missing a methyl or amino substituent.",
+      "category": "Organic compound - sulfonamide"
+    },
+    {
+      "name": "Fosfonat",
+      "current_smiles": "CP(=O)(O)O",
+      "current_formula": "C2H7O3P",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES shows methylphosphonic acid (CH5O3P) but formula claims C2H7O3P. The formula should have 2 carbons.",
+      "correct_smiles": "CCP(=O)(O)O",
+      "source": "Ethylphosphonic acid",
+      "why_wrong": "CP(=O)(O)O is methylphosphonic (CH5O3P). To get C2H7O3P, need ethyl: CCP(=O)(O)O",
+      "category": "Organic compound - organophosphorus"
+    },
+    {
+      "name": "Fosfat ester",
+      "current_smiles": "COP(=O)(O)OC",
+      "current_formula": "C3H9O4P",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES shows dimethyl phosphate (C2H7O4P) but formula claims C3H9O4P. Need one more carbon.",
+      "correct_smiles": "CCOP(=O)(O)OC",
+      "source": "Ethyl methyl phosphate",
+      "why_wrong": "COP(=O)(O)OC is dimethyl phosphate C2H7O4P. To get C3H9O4P, need ethyl methyl phosphate.",
+      "category": "Organic compound - phosphate ester"
+    },
+    {
+      "name": "Siloksan",
+      "current_smiles": "C[Si](C)(O[Si](C)(C)C)O",
+      "current_formula": "C4H12OSi2",
+      "issue": "FORMULA_MISMATCH",
+      "problem": "The SMILES shows C5H16O2Si2 (hexamethyldisiloxane with OH groups) but formula claims C4H12OSi2. This is incorrect formula.",
+      "correct_smiles": "C[Si](C)(O[Si](C)(C)C)C",
+      "source": "Hexamethyldisiloxane or similar siloxane",
+      "why_wrong": "The SMILES C[Si](C)(O[Si](C)(C)C)O should be C5H16O2Si2 not C4H12OSi2. The formula seems wrong or missing a methyl in SMILES.",
+      "category": "Inorganic/Organometallic compound"
+    }
+  ],
+  "recommendations": {
+    "critical_issues": [
+      "Kobalamin (B12): Severely incomplete SMILES - only shows nucleoside portion, missing entire corrinoid ring system",
+      "Koensym Q10: SMILES is severely truncated - side chain is incomplete",
+      "Cellulose: SMILES shows glucose not cellobiose - needs polysaccharide representation"
+    ],
+    "priority_fixes": [
+      "Research complete B12 structure from chemical databases",
+      "Expand Q10 side chain to full 10-unit isoprenyl chain",
+      "Use cellobiose or polysaccharide SMILES for cellulose",
+      "Verify and correct formulas for: Hemiacetal, Amid, Karbamat, Disulfid, Sulfon"
+    ],
+    "note_on_complex_molecules": "Some complex molecules like vitamins and cofactors may be difficult to represent as single SMILES strings. Consider using: 1) Parent structure SMILES with comments, 2) SMILES for major active form, or 3) Link to full 3D structure."
+  }
+}

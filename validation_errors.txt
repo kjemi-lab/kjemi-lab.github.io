@@ -1,0 +1,53 @@
+Valid: 245/255
+Errors: 10/255
+
+57. Kobalamin (B12)
+   Expected: C63H88CoN14O14P
+   Got: C14H21CoN5O8P-
+   SMILES: C[C@H]([C@@H]1[C@@H]([C@H](O[C@@H]1n2c3c(c(=O)[nH]c2=O)nc[nH]3)CO)OP(=O)([O-])O)N(C)C.[Co]
+
+145. Amoniakk
+   Expected: NH3
+   Got: H3N
+   SMILES: N
+
+177. Koensym Q10
+   Expected: C59H90O4
+   Got: C43H58O3
+   SMILES: CC(C)=CCCC(C)=CC(=CC(=CC(=CC(=CC(=CC(=CC(=CC(=C(C)C)C)C)C)C)C)C)C)C(=O)c1cc(OC)c(OC)cc1
+
+199. Natriumoksalat
+   Expected: Na2C2O4
+   Got: C2Na2O4
+   SMILES: C(=O)(C(=O)[O-])[O-].[Na+].[Na+]
+
+215. SO2
+   Expected: SO2
+   Got: O2S
+   SMILES: O=S=O
+
+217. NH3
+   Expected: NH3
+   Got: H3N
+   SMILES: [NH3]
+
+218. PH3
+   Expected: PH3
+   Got: H3P
+   SMILES: [PH3]
+
+219. BH3
+   Expected: BH3
+   Got: H3B
+   SMILES: [BH3]
+
+220. SiH4
+   Expected: SiH4
+   Got: H4Si
+   SMILES: [SiH4]
+
+253. Boronsyre
+   Expected: BH3O3
+   Got: H3BO3
+   SMILES: B(O)(O)O
+

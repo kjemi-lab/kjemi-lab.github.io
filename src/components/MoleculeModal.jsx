@@ -64,13 +64,14 @@ const MoleculeModal = ({ molecule, onClose }) => {
             >
               <div className="flex items-center justify-center min-h-[400px]">
                 <Molecule2D
+                  key={`${molecule.name}-${molecule.smiles}`}
                   smiles={molecule.smiles}
                   width={Math.min(420, 200 + molecule.smiles.length * 2)}
                   height={Math.min(420, 200 + molecule.smiles.length * 2)}
                   className="w-full"
                 />
               </div>
-              <p className="text-xs text-gray-400 text-center mt-3">
+              <p className="text-xs text-gray-400 text-center mt-3 font-mono break-all">
                 SMILES: {molecule.smiles}
               </p>
             </motion.div>
