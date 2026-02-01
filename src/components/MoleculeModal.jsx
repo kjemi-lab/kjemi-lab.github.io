@@ -14,7 +14,7 @@ const MoleculeModal = ({ molecule, onClose }) => {
         className="fixed inset-0 z-50 flex items-center justify-center p-4"
         onClick={onClose}
       >
-        <div className="absolute inset-0 bg-black/80 backdrop-blur-custom" />
+        <div className="absolute inset-0 bg-white/80 backdrop-blur-custom" />
 
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
