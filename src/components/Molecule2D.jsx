@@ -85,7 +85,7 @@ const Molecule2D = ({ smiles, width = 200, height = 200, className = '' }) => {
         themes: {
           'kjemi-dark': {
             C: '#a0a0a0', O: '#ff6666', N: '#ff9999', H: '#ffffff',
-            F: '#ffffff', CL: '#ffffff', BR: '#ffffff', I: '#ffffff',
+            F: '#99ff99', CL: '#99ff99', BR: '#99ff99', I: '#99ff99',
             P: '#ffcc99', S: '#ffff99', B: '#a0a0a0', SI: '#ffffff',
             BACKGROUND: '#1A1A2B',
           },
