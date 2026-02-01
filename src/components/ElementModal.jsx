@@ -39,14 +39,14 @@ const ElementModal = ({ element, onClose }) => {
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-surface rounded-2xl border border-primary/20 shadow-2xl"
+          className="relative w-full max-w-sm sm:max-w-2xl md:max-w-4xl lg:max-w-6xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto bg-surface rounded-xl sm:rounded-2xl border border-primary/20 shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Action buttons */}
-          <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+          <div className="absolute top-3 sm:top-4 right-3 sm:right-4 z-10 flex items-center gap-1 sm:gap-2">
             <motion.button
               onClick={toggleFavorite.bind(null, element.atomic_number)}
-              className={`p-2 rounded-full bg-surface/80 hover:bg-surface border transition-all duration-200 ${
+              className={`p-1.5 sm:p-2 rounded-full bg-surface/80 hover:bg-surface border transition-all duration-200 ${
                 isFavorite(element.atomic_number)
                   ? 'border-neon-yellow/50 text-neon-yellow'
                   : 'border-primary/30 hover:border-primary/50 text-white'
@@ -55,48 +55,48 @@ const ElementModal = ({ element, onClose }) => {
               whileTap={{ scale: 0.9 }}
               title={isFavorite(element.atomic_number) ? 'Fjern fra favoritter' : 'Legg til i favoritter'}
             >
-              <Heart className={`w-5 h-5 ${isFavorite(element.atomic_number) ? 'fill-neon-yellow' : ''}`} />
+              <Heart className={`w-4 sm:w-5 h-4 sm:h-5 ${isFavorite(element.atomic_number) ? 'fill-neon-yellow' : ''}`} />
             </motion.button>
             <motion.button
               onClick={handleShare}
-              className="p-2 rounded-full bg-surface/80 hover:bg-surface border border-primary/30 hover:border-primary/50 transition-all duration-200 text-white"
+              className="p-1.5 sm:p-2 rounded-full bg-surface/80 hover:bg-surface border border-primary/30 hover:border-primary/50 transition-all duration-200 text-white"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               title="Del lenke"
             >
-              {shareCopied ? <Check className="w-5 h-5 text-green-400" /> : <Share2 className="w-5 h-5" />}
+              {shareCopied ? <Check className="w-4 sm:w-5 h-4 sm:h-5 text-green-400" /> : <Share2 className="w-4 sm:w-5 h-4 sm:h-5" />}
             </motion.button>
             <button
               onClick={onClose}
-              className="p-2 rounded-full bg-surface/80 hover:bg-surface border border-primary/30 hover:border-primary/50 transition-all duration-200"
+              className="p-1.5 sm:p-2 rounded-full bg-surface/80 hover:bg-surface border border-primary/30 hover:border-primary/50 transition-all duration-200"
             >
-              <X className="w-5 h-5 text-white" />
+              <X className="w-4 sm:w-5 h-4 sm:h-5 text-white" />
             </button>
           </div>
 
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {/* Header */}
             <motion.div 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-center mb-8"
+              className="text-center mb-6 sm:mb-8"
             >
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <div className={`w-16 h-16 rounded-full ${categoryColor} flex items-center justify-center text-3xl font-bold text-white shadow-glow`}>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4">
+                <div className={`w-12 sm:w-16 h-12 sm:h-16 rounded-full ${categoryColor} flex items-center justify-center text-2xl sm:text-3xl font-bold text-white shadow-glow shrink-0`}>
                   {element.symbol}
                 </div>
-                <div className="text-left">
-                  <h2 className="text-3xl font-bold text-white">{element.name_norwegian}</h2>
-                  <p className="text-lg text-gray-400">{element.name_english}</p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <span className="text-sm text-gray-500">Atomnummer:</span>
-                    <span className="text-lg font-semibold text-primary">{element.atomic_number}</span>
+                <div className="text-center sm:text-left">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-white">{element.name_norwegian}</h2>
+                  <p className="text-xs sm:text-base text-gray-400">{element.name_english}</p>
+                  <div className="flex items-center justify-center sm:justify-start gap-2 mt-1 sm:mt-2">
+                    <span className="text-xs text-gray-500">Atomnummer:</span>
+                    <span className="text-sm sm:text-lg font-semibold text-primary">{element.atomic_number}</span>
                   </div>
                 </div>
               </div>
               
-              <div className={`inline-block px-4 py-2 rounded-full ${categoryColor} text-white font-medium`}>
+              <div className={`inline-block px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-base ${categoryColor} text-white font-medium`}>
                 {categoryName}
               </div>
             </motion.div>

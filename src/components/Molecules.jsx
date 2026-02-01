@@ -43,13 +43,13 @@ const Molecules = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-4 sm:p-6">
       {/* Header */}
-      <div className="text-center mb-8">
+      <div className="text-center mb-6 sm:mb-8">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-5xl font-bold text-gradient mb-4"
+          className="text-3xl sm:text-4xl md:text-5xl font-bold text-gradient mb-3 sm:mb-4"
         >
           {t('molecules')}
         </motion.h1>
@@ -57,27 +57,27 @@ const Molecules = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-xl text-gray-300 max-w-4xl mx-auto"
+          className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 max-w-4xl mx-auto"
         >
           {t('moleculesDesc')}
         </motion.p>
       </div>
 
       {/* Search and Filter */}
-      <div className="max-w-4xl mx-auto mb-8 space-y-4">
-        <div className="flex flex-col sm:flex-row gap-4">
+      <div className="max-w-4xl mx-auto mb-6 sm:mb-8 space-y-3 sm:space-y-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 sm:w-5 h-4 sm:h-5" />
             <input
               type="text"
               placeholder={t('moleculesSearchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-surface border border-primary/30 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+              className="w-full pl-10 pr-4 py-2 sm:py-3 bg-surface border border-primary/30 rounded-lg text-sm sm:text-base text-white placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
             />
           </div>
           <div className="flex items-center gap-2">
-            <Filter className="text-gray-400 w-5 h-5 shrink-0" />
+            <Filter className="text-gray-400 w-4 sm:w-5 h-4 sm:h-5 shrink-0" />
             <select
               value={selectedGroup}
               onChange={(e) => setSelectedGroup(e.target.value)}
@@ -97,7 +97,7 @@ const Molecules = () => {
       {/* Molecule Grid */}
       <div className="max-w-7xl mx-auto">
         <motion.div
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-5"
+          className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
@@ -114,22 +114,22 @@ const Molecules = () => {
                 className="bg-surface/50 border border-primary/20 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:scale-[1.02]"
                 onClick={() => setSelectedMolecule(molecule)}
               >
-                <div className="aspect-square flex items-center justify-center mb-3 bg-background/30 rounded-lg overflow-hidden min-h-[180px]">
+                <div className="aspect-square flex items-center justify-center mb-2 sm:mb-3 bg-background/30 rounded-lg overflow-hidden min-h-[120px] sm:min-h-[160px] md:min-h-[180px]">
                   <Molecule2D
                     smiles={molecule.smiles}
-                    width={190}
-                    height={190}
+                    width={Math.min(window.innerWidth / 2 - 30, 190)}
+                    height={Math.min(window.innerWidth / 2 - 30, 190)}
                   />
                 </div>
-                <h3 className="font-semibold text-white text-sm truncate">
+                <h3 className="font-semibold text-white text-xs sm:text-sm truncate">
                   {molecule.name}
                 </h3>
-                <p className="text-gray-400 text-xs truncate">{molecule.formula}</p>
-                <div className="flex flex-wrap gap-1 mt-2">
+                <p className="text-gray-400 text-[10px] sm:text-xs truncate">{molecule.formula}</p>
+                <div className="flex flex-wrap gap-1 mt-1 sm:mt-2">
                   {molecule.groups.slice(0, 2).map((g) => (
                     <span
                       key={g}
-                      className="text-[10px] px-1.5 py-0.5 rounded bg-primary/20 text-primary"
+                      className="text-[8px] sm:text-[10px] px-1.5 py-0.5 rounded bg-primary/20 text-primary"
                     >
                       {moleculeGroups[g]}
                     </span>

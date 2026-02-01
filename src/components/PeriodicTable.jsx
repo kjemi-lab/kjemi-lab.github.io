@@ -98,11 +98,11 @@ const PeriodicTable = ({ onElementSelect }) => {
   return (
     <div className="min-h-screen bg-background p-6">
       {/* Header */}
-      <div className="text-center mb-8">
+      <div className="text-center mb-6 sm:mb-8 px-4 sm:px-0">
         <motion.h1 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-5xl font-bold text-gradient mb-4"
+          className="text-3xl sm:text-4xl md:text-5xl font-bold text-gradient mb-3 sm:mb-4"
         >
           Kjemi Lab
         </motion.h1>
@@ -110,38 +110,38 @@ const PeriodicTable = ({ onElementSelect }) => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-xl text-gray-300 max-w-4xl mx-auto"
+          className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-300 max-w-4xl mx-auto"
         >
           Utforsk alle {elements.length} grunnstoff med interaktive 3D atom-modeller og detaljerte beskrivelser
         </motion.p>
       </div>
 
       {/* Search and Filter */}
-      <div className="max-w-4xl mx-auto mb-8 space-y-4">
-        <div className="flex items-center gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+      <div className="max-w-4xl mx-auto mb-6 sm:mb-8 space-y-3 sm:space-y-4 px-4 sm:px-0">
+        <div className="flex flex-col sm:items-center sm:gap-4 gap-3">
+          <div className="relative flex-1 w-full sm:w-auto">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 sm:w-5 h-4 sm:h-5" />
             <input
               type="text"
               placeholder={t('searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-surface border border-primary/30 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+              className="w-full pl-10 pr-4 py-2 sm:py-3 bg-surface border border-primary/30 rounded-lg text-sm sm:text-base text-white placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
             />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <motion.button
               onClick={() => setShowComparison(true)}
-              className="px-6 py-3 bg-primary/20 border border-primary/50 rounded-lg text-white hover:bg-primary/30 transition-colors flex items-center gap-2 font-medium"
+              className="px-3 sm:px-6 py-2 sm:py-3 bg-primary/20 border border-primary/50 rounded-lg text-white text-xs sm:text-sm hover:bg-primary/30 transition-colors flex items-center gap-2 font-medium flex-1 sm:flex-none justify-center"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <GitCompare className="w-5 h-5" />
-              {t('compare')}
+              <GitCompare className="w-4 sm:w-5 h-4 sm:h-5" />
+              <span className="hidden sm:inline">{t('compare')}</span>
             </motion.button>
             <motion.button
               onClick={() => setShowFavorites(!showFavorites)}
-              className={`px-4 py-3 border rounded-lg transition-colors flex items-center gap-2 font-medium ${
+              className={`px-3 sm:px-4 py-2 sm:py-3 border rounded-lg transition-colors flex items-center gap-2 font-medium text-xs sm:text-sm flex-1 sm:flex-none justify-center ${
                 showFavorites
                   ? 'bg-neon-yellow/20 border-neon-yellow/50 text-neon-yellow'
                   : 'bg-primary/20 border-primary/50 text-white hover:bg-primary/30'
@@ -149,18 +149,19 @@ const PeriodicTable = ({ onElementSelect }) => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Heart className={`w-5 h-5 ${showFavorites ? 'fill-neon-yellow' : ''}`} />
-              {t('favorites')} ({favorites.length})
+              <Heart className={`w-4 sm:w-5 h-4 sm:h-5 ${showFavorites ? 'fill-neon-yellow' : ''}`} />
+              <span className="hidden sm:inline">{t('favorites')} ({favorites.length})</span>
+              <span className="sm:hidden">({favorites.length})</span>
             </motion.button>
           </div>
         </div>
         
         <div className="flex items-center gap-2">
-          <Filter className="text-gray-400 w-5 h-5" />
+          <Filter className="text-gray-400 w-4 sm:w-5 h-4 sm:h-5" />
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="bg-surface border border-primary/30 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+            className="bg-surface border border-primary/30 rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 flex-1 sm:flex-none"
           >
             <option value="all">{t('allCategories')} ({elements.length})</option>
             {Object.entries(categoryNames).map(([key, name]) => (
@@ -177,8 +178,8 @@ const PeriodicTable = ({ onElementSelect }) => {
         <div 
           className="grid gap-0.5 mx-auto"
           style={{
-            gridTemplateColumns: 'repeat(18, minmax(45px, 1fr))',
-            gridTemplateRows: 'repeat(10, minmax(45px, 1fr))',
+            gridTemplateColumns: 'repeat(18, minmax(35px, 1fr))',
+            gridTemplateRows: 'repeat(10, minmax(35px, 1fr))',
             minWidth: 'max-content'
           }}
         >
