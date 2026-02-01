@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Atom, Zap, Thermometer, Scale } from 'lucide-react';
+import { X, Atom, Zap, Thermometer, Scale, Heart, Share2, Check } from 'lucide-react';
 import Atom3D from './Atom3D';
 import { categoryColors, categoryNames } from '../data/elements';
+import { useFavorites } from '../hooks/useFavorites';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const ElementModal = ({ element, onClose }) => {
   const categoryColor = categoryColors[element.category];
   const categoryName = categoryNames[element.category];
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const { t } = useLanguage();
+  const [shareCopied, setShareCopied] = useState(false);
+
+  const handleShare = () => {
+    const url = `${window.location.origin}${window.location.pathname}#element/${element.atomic_number}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    });
+  };
 
   return (
     <AnimatePresence>
@@ -29,13 +42,37 @@ const ElementModal = ({ element, onClose }) => {
           className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-surface rounded-2xl border border-primary/20 shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Close button */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 z-10 p-2 rounded-full bg-surface/80 hover:bg-surface border border-primary/30 hover:border-primary/50 transition-all duration-200"
-          >
-            <X className="w-5 h-5 text-white" />
-          </button>
+          {/* Action buttons */}
+          <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+            <motion.button
+              onClick={toggleFavorite.bind(null, element.atomic_number)}
+              className={`p-2 rounded-full bg-surface/80 hover:bg-surface border transition-all duration-200 ${
+                isFavorite(element.atomic_number)
+                  ? 'border-neon-yellow/50 text-neon-yellow'
+                  : 'border-primary/30 hover:border-primary/50 text-white'
+              }`}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              title={isFavorite(element.atomic_number) ? 'Fjern fra favoritter' : 'Legg til i favoritter'}
+            >
+              <Heart className={`w-5 h-5 ${isFavorite(element.atomic_number) ? 'fill-neon-yellow' : ''}`} />
+            </motion.button>
+            <motion.button
+              onClick={handleShare}
+              className="p-2 rounded-full bg-surface/80 hover:bg-surface border border-primary/30 hover:border-primary/50 transition-all duration-200 text-white"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              title="Del lenke"
+            >
+              {shareCopied ? <Check className="w-5 h-5 text-green-400" /> : <Share2 className="w-5 h-5" />}
+            </motion.button>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-full bg-surface/80 hover:bg-surface border border-primary/30 hover:border-primary/50 transition-all duration-200"
+            >
+              <X className="w-5 h-5 text-white" />
+            </button>
+          </div>
 
           <div className="p-6">
             {/* Header */}

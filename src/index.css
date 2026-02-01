@@ -3,15 +3,140 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg-background: #0D0D1A;
+    --bg-surface: #1A1A2B;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+  }
+
+  html.light {
+    --bg-background: #f5f5f5;
+    --bg-surface: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #666666;
+  }
+
   body {
-    @apply bg-background text-white font-sans;
+    background-color: var(--bg-background);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   
   html {
     scroll-behavior: smooth;
+  }
+
+  /* Light mode specific overrides */
+  html.light .bg-background {
+    background-color: var(--bg-background) !important;
+  }
+
+  html.light .bg-surface {
+    background-color: var(--bg-surface) !important;
+  }
+
+  html.light .text-white {
+    color: var(--text-primary) !important;
+  }
+
+  html.light .text-gray-300 {
+    color: var(--text-secondary) !important;
+  }
+
+  html.light .text-gray-400 {
+    color: #888888 !important;
+  }
+
+  html.light .text-gray-500 {
+    color: #666666 !important;
+  }
+
+  html.light .border-primary\/20 {
+    border-color: rgba(159, 85, 255, 0.2) !important;
+  }
+
+  html.light .bg-surface\/30 {
+    background-color: rgba(255, 255, 255, 0.3) !important;
+  }
+
+  html.light .bg-surface\/50 {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+  }
+
+  html.light .bg-surface\/80 {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+  }
+
+  html.light .bg-black\/80 {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+  }
+
+  html.light .bg-background\/30 {
+    background-color: rgba(245, 245, 245, 0.3) !important;
+  }
+
+  /* Light mode element card colors - preserve category colors */
+  html.light .element-card {
+    background-color: var(--bg-surface) !important;
+  }
+
+  /* Make category border colors more visible in light mode */
+  html.light .border-neon-red,
+  html.light .border-neon-red\/50 {
+    border-color: #ff4444 !important;
+    border-width: 2px !important;
+  }
+
+  html.light .border-neon-orange,
+  html.light .border-neon-orange\/50 {
+    border-color: #ff8844 !important;
+    border-width: 2px !important;
+  }
+
+  html.light .border-neon-green,
+  html.light .border-neon-green\/50 {
+    border-color: #44ff44 !important;
+    border-width: 2px !important;
+  }
+
+  html.light .border-neon-yellow,
+  html.light .border-neon-yellow\/50 {
+    border-color: #ffaa00 !important;
+    border-width: 2px !important;
+  }
+
+  html.light .border-neon-cyan,
+  html.light .border-neon-cyan\/50 {
+    border-color: #00aaaa !important;
+    border-width: 2px !important;
+  }
+
+  html.light .border-neon-blue,
+  html.light .border-neon-blue\/50 {
+    border-color: #4444ff !important;
+    border-width: 2px !important;
+  }
+
+  html.light .border-neon-purple,
+  html.light .border-neon-purple\/50 {
+    border-color: #8844ff !important;
+    border-width: 2px !important;
+  }
+
+  html.light .border-neon-magenta,
+  html.light .border-neon-magenta\/50 {
+    border-color: #ff44ff !important;
+    border-width: 2px !important;
+  }
+
+  /* Light mode 3D canvas background */
+  html.light .bg-background\/30 {
+    background-color: rgba(240, 240, 240, 0.5) !important;
   }
 }
 

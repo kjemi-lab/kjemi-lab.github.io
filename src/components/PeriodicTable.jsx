@@ -1,13 +1,36 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, GitCompare, Heart, Clock } from 'lucide-react';
 import { elements, categoryColors, categoryNames } from '../data/elements';
 import ElementModal from './ElementModal';
+import ElementComparison from './ElementComparison';
+import { useFavorites } from '../hooks/useFavorites';
+import { useRecentlyViewed } from '../hooks/useRecentlyViewed';
+import { useLanguage } from '../contexts/LanguageContext';
 
-const PeriodicTable = () => {
+const PeriodicTable = ({ onElementSelect }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedElement, setSelectedElement] = useState(null);
+  const [showComparison, setShowComparison] = useState(false);
+  const [showFavorites, setShowFavorites] = useState(false);
+  const { favorites, isFavorite, toggleFavorite } = useFavorites();
+  const { recentlyViewed, addToRecentlyViewed } = useRecentlyViewed();
+  const { t, language } = useLanguage();
+
+  // Handle element selection from URL
+  useEffect(() => {
+    if (onElementSelect) {
+      const hash = window.location.hash;
+      if (hash.startsWith('#element/')) {
+        const atomicNumber = parseInt(hash.split('/')[1]);
+        const element = elements.find(el => el.atomic_number === atomicNumber);
+        if (element) {
+          onElementSelect(element);
+        }
+      }
+    }
+  }, [onElementSelect]);
 
   // Group elements by category for display
   const elementsByCategory = useMemo(() => {
@@ -24,6 +47,10 @@ const PeriodicTable = () => {
   const filteredElements = useMemo(() => {
     let filtered = elements;
     
+    if (showFavorites) {
+      filtered = filtered.filter(element => favorites.includes(element.atomic_number));
+    }
+    
     if (searchTerm) {
       filtered = filtered.filter(element =>
         element.name_norwegian.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -37,7 +64,7 @@ const PeriodicTable = () => {
     }
     
     return filtered;
-  }, [searchTerm, selectedCategory]);
+  }, [searchTerm, selectedCategory, showFavorites, favorites]);
 
   const getGridPosition = (element) => {
     if (element.atomic_number >= 57 && element.atomic_number <= 71) { // Lanthanides
@@ -91,15 +118,41 @@ const PeriodicTable = () => {
 
       {/* Search and Filter */}
       <div className="max-w-4xl mx-auto mb-8 space-y-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-          <input
-            type="text"
-            placeholder="Søk etter grunnstoff eller symbol..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-surface border border-primary/30 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
-          />
+        <div className="flex items-center gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder={t('searchPlaceholder')}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 bg-surface border border-primary/30 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <motion.button
+              onClick={() => setShowComparison(true)}
+              className="px-6 py-3 bg-primary/20 border border-primary/50 rounded-lg text-white hover:bg-primary/30 transition-colors flex items-center gap-2 font-medium"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <GitCompare className="w-5 h-5" />
+              {t('compare')}
+            </motion.button>
+            <motion.button
+              onClick={() => setShowFavorites(!showFavorites)}
+              className={`px-4 py-3 border rounded-lg transition-colors flex items-center gap-2 font-medium ${
+                showFavorites
+                  ? 'bg-neon-yellow/20 border-neon-yellow/50 text-neon-yellow'
+                  : 'bg-primary/20 border-primary/50 text-white hover:bg-primary/30'
+              }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Heart className={`w-5 h-5 ${showFavorites ? 'fill-neon-yellow' : ''}`} />
+              {t('favorites')} ({favorites.length})
+            </motion.button>
+          </div>
         </div>
         
         <div className="flex items-center gap-2">
@@ -109,7 +162,7 @@ const PeriodicTable = () => {
             onChange={(e) => setSelectedCategory(e.target.value)}
             className="bg-surface border border-primary/30 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
           >
-            <option value="all">Alle kategorier ({elements.length})</option>
+            <option value="all">{t('allCategories')} ({elements.length})</option>
             {Object.entries(categoryNames).map(([key, name]) => (
               <option key={key} value={key}>
                 {name} ({elementsByCategory[key]?.length || 0})
@@ -137,18 +190,75 @@ const PeriodicTable = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
               style={getGridPosition(element)}
-              className={`element-card ${categoryColors[element.category]} cursor-pointer`}
-              onClick={() => setSelectedElement(element)}
+              className={`element-card ${categoryColors[element.category]}/50 cursor-pointer relative ${
+                isFavorite(element.atomic_number) ? 'ring-2 ring-neon-yellow' : ''
+              }`}
+              onClick={() => {
+                setSelectedElement(element);
+                addToRecentlyViewed(element.atomic_number);
+                window.location.hash = `element/${element.atomic_number}`;
+              }}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                toggleFavorite(element.atomic_number);
+              }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
+              {isFavorite(element.atomic_number) && (
+                <Heart className="absolute top-1 right-1 w-3 h-3 fill-neon-yellow text-neon-yellow" />
+              )}
               <div className="text-xs text-gray-400 text-left leading-none">{element.atomic_number}</div>
               <div className="text-lg font-bold text-center leading-none">{element.symbol}</div>
-              <div className="text-xs text-center text-gray-300 leading-none">{element.name_norwegian}</div>
+              <div className="text-xs text-center text-gray-300 leading-none">
+                {language === 'no' ? element.name_norwegian : element.name_english}
+              </div>
             </motion.div>
           ))}
         </div>
       </div>
+
+      {/* Recently Viewed */}
+      {recentlyViewed.length > 0 && !showFavorites && (
+        <div className="max-w-6xl mx-auto mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-surface/50 rounded-xl p-6 border border-primary/20"
+          >
+            <div className="flex items-center gap-2 mb-4">
+              <Clock className="w-5 h-5 text-primary" />
+              <h3 className="text-xl font-semibold text-white">{t('recentlyViewed')}</h3>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {recentlyViewed.slice(0, 10).map((atomicNumber) => {
+                const element = elements.find(el => el.atomic_number === atomicNumber);
+                if (!element) return null;
+                return (
+                  <motion.button
+                    key={atomicNumber}
+                    onClick={() => {
+                      setSelectedElement(element);
+                      addToRecentlyViewed(element.atomic_number);
+                      window.location.hash = `element/${element.atomic_number}`;
+                    }}
+                    className={`px-3 py-2 rounded-lg border-2 transition-all ${
+                      categoryColors[element.category]
+                    } hover:scale-105`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <span className="font-bold">{element.symbol}</span>
+                    <span className="text-xs ml-1">
+                      {language === 'no' ? element.name_norwegian : element.name_english}
+                    </span>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </motion.div>
+        </div>
+      )}
 
       {/* Category Explanation */}
       <div className="max-w-6xl mx-auto mb-12">
@@ -188,7 +298,17 @@ const PeriodicTable = () => {
       {selectedElement && (
         <ElementModal
           element={selectedElement}
-          onClose={() => setSelectedElement(null)}
+          onClose={() => {
+            setSelectedElement(null);
+            window.history.replaceState(null, '', window.location.pathname);
+          }}
+        />
+      )}
+
+      {/* Comparison Modal */}
+      {showComparison && (
+        <ElementComparison
+          onClose={() => setShowComparison(false)}
         />
       )}
     </div>

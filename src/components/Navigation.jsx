@@ -1,13 +1,18 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Atom } from 'lucide-react';
+import { Atom, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Navigation = ({ activeTab, onTabChange }) => {
+  const { theme, toggleTheme } = useTheme();
+  const { t } = useLanguage();
+
   const tabs = [
-    { id: 'home', label: 'Hjem' },
-    { id: 'periodic-table', label: 'Periodisk Tabell' },
-    { id: 'element-builder', label: 'Grunnstoff-bygger' },
-    { id: 'molecule-builder', label: 'Molecule Builder' }
+    { id: 'home', labelKey: 'home' },
+    { id: 'periodic-table', labelKey: 'periodicTable' },
+    { id: 'element-builder', labelKey: 'elementBuilder' },
+    { id: 'molecule-builder', labelKey: 'moleculeBuilder' }
   ];
 
   return (
@@ -26,8 +31,8 @@ const Navigation = ({ activeTab, onTabChange }) => {
           </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
+          <div className="hidden md:flex items-center gap-4">
+            <div className="flex items-baseline space-x-4">
               {tabs.map((tab) => (
                 <motion.button
                   key={tab.id}
@@ -40,14 +45,25 @@ const Navigation = ({ activeTab, onTabChange }) => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {tab.label}
+                  {t(tab.labelKey)}
                 </motion.button>
               ))}
             </div>
+            
+            {/* Theme Toggle */}
+            <motion.button
+              onClick={toggleTheme}
+              className="p-2 rounded-md text-gray-300 hover:text-white hover:bg-surface/50 transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </motion.button>
           </div>
 
           {/* Mobile Navigation */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center gap-2">
             <div className="flex items-center space-x-2">
               {tabs.map((tab) => (
                 <motion.button
@@ -61,10 +77,17 @@ const Navigation = ({ activeTab, onTabChange }) => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {tab.label}
+                  {t(tab.labelKey)}
                 </motion.button>
               ))}
             </div>
+            <motion.button
+              onClick={toggleTheme}
+              className="p-2 rounded-md text-gray-300 hover:text-white"
+              whileTap={{ scale: 0.9 }}
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </motion.button>
           </div>
         </div>
       </div>

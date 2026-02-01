@@ -1,28 +1,31 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Atom, Zap, Target, Users } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Home = ({ onTabChange }) => {
+  const { t } = useLanguage();
+
   const features = [
     {
       icon: Atom,
-      title: "Periodisk Tabell",
-      description: "Utforsk alle 118 grunnstoff med interaktive 3D atom-modeller og detaljerte beskrivelser på norsk.",
+      titleKey: "periodicTable",
+      descriptionKey: "periodicTableDesc",
       tab: "periodic-table"
     },
     {
       icon: Zap,
-      title: "Grunnstoff-bygger",
-      description: "Bygg dine egne atomer og se hvordan endringer i protoner, nøytroner og elektroner påvirker egenskapene.",
+      titleKey: "elementBuilder",
+      descriptionKey: "elementBuilderDesc",
       tab: "element-builder"
     }
   ];
 
   const stats = [
-    { number: "118", label: "Grunnstoff" },
-    { number: "10", label: "Kategorier" },
-    { number: "3D", label: "Atom-modeller" },
-    { number: "100%", label: "Norsk" }
+    { number: "118", labelKey: "elements" },
+    { number: "10", labelKey: "categories" },
+    { number: "3D", labelKey: "atomModels" },
+    { number: "100%", labelKey: "norwegian" }
   ];
 
   const handleButtonClick = (tab) => {
@@ -66,13 +69,13 @@ const Home = ({ onTabChange }) => {
               onClick={() => handleButtonClick('periodic-table')}
               className="btn-primary text-lg px-8 py-4"
             >
-              Utforsk Periodisk Tabell
+              {t('explorePeriodicTable')}
             </button>
             <button 
               onClick={() => handleButtonClick('element-builder')}
               className="btn-secondary text-lg px-8 py-4"
             >
-              Prøv Grunnstoff-bygger
+              {t('tryElementBuilder')}
             </button>
           </motion.div>
         </motion.div>
@@ -90,7 +93,7 @@ const Home = ({ onTabChange }) => {
           >
             {stats.map((stat, index) => (
               <motion.div 
-                key={stat.label}
+                key={stat.labelKey}
                 className="text-center"
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -100,7 +103,7 @@ const Home = ({ onTabChange }) => {
                 <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
                   {stat.number}
                 </div>
-                <div className="text-gray-300">{stat.label}</div>
+                <div className="text-gray-300">{t(stat.labelKey)}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -118,11 +121,10 @@ const Home = ({ onTabChange }) => {
             viewport={{ once: true }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-gradient mb-6">
-              Hvorfor Kjemi Lab?
+              {t('whyKjemiLab')}
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Vi kombinerer moderne teknologi med pedagogisk design for å gjøre kjemi 
-              tilgjengelig og engasjerende for alle.
+              {t('whyDesc')}
             </p>
           </motion.div>
 
@@ -143,8 +145,8 @@ const Home = ({ onTabChange }) => {
                   <div className="w-16 h-16 bg-primary/20 rounded-xl flex items-center justify-center mb-6">
                     <Icon className="w-8 h-8 text-primary" />
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
-                  <p className="text-gray-300 leading-relaxed">{feature.description}</p>
+                  <h3 className="text-2xl font-bold text-white mb-4">{t(feature.titleKey)}</h3>
+                  <p className="text-gray-300 leading-relaxed">{t(feature.descriptionKey)}</p>
                 </motion.div>
               );
             })}
@@ -163,23 +165,23 @@ const Home = ({ onTabChange }) => {
           >
             <Target className="w-16 h-16 text-primary mx-auto mb-6" />
             <h2 className="text-4xl md:text-5xl font-bold text-gradient mb-6">
-              Hvem er Kjemi Lab for?
+              {t('whoFor')}
             </h2>
             <div className="grid md:grid-cols-3 gap-8 mt-12">
               <div className="text-center">
                 <Users className="w-12 h-12 text-primary mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-white mb-2">Ungdomsskoleelever</h3>
-                <p className="text-gray-300">Lær grunnleggende kjemi på en morsom og interaktiv måte</p>
+                <h3 className="text-xl font-bold text-white mb-2">{t('middleSchool')}</h3>
+                <p className="text-gray-300">{t('middleSchoolDesc')}</p>
               </div>
               <div className="text-center">
                 <Users className="w-12 h-12 text-primary mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-white mb-2">Videregående elever</h3>
-                <p className="text-gray-300">Fordyp deg i periodisk systemet og atomstruktur</p>
+                <h3 className="text-xl font-bold text-white mb-2">{t('highSchool')}</h3>
+                <p className="text-gray-300">{t('highSchoolDesc')}</p>
               </div>
               <div className="text-center">
                 <Users className="w-12 h-12 text-primary mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-white mb-2">Lærere</h3>
-                <p className="text-gray-300">Bruk som pedagogisk verktøy i kjemifaget</p>
+                <h3 className="text-xl font-bold text-white mb-2">{t('teachers')}</h3>
+                <p className="text-gray-300">{t('teachersDesc')}</p>
               </div>
             </div>
           </motion.div>
@@ -196,16 +198,16 @@ const Home = ({ onTabChange }) => {
             viewport={{ once: true }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-gradient mb-6">
-              Klar til å utforske kjemi?
+              {t('readyToExplore')}
             </h2>
             <p className="text-xl text-gray-300 mb-8">
-              Start din reise inn i atomverdenen med Kjemi Lab
+              {t('startJourney')}
             </p>
             <button 
               onClick={() => handleButtonClick('periodic-table')}
               className="btn-primary text-lg px-8 py-4"
             >
-              Kom i gang nå
+              {t('getStarted')}
             </button>
           </motion.div>
         </div>

@@ -1,11 +1,13 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Atom3D = ({ protons, neutrons, electrons }) => {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
   const animationIdRef = useRef(null);
+  const { theme } = useTheme();
 
   // Memoize geometries and materials for performance
   const geometries = useMemo(() => ({
@@ -54,11 +56,13 @@ const Atom3D = ({ protons, neutrons, electrons }) => {
 
     // Renderer setup
     const renderer = new THREE.WebGLRenderer({ 
-      alpha: true, 
+      alpha: theme === 'dark', 
       antialias: true
     });
     renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
-    renderer.setClearColor(0x000000, 0);
+    // Set background color based on theme
+    const bgColor = theme === 'light' ? 0xf5f5f5 : 0x000000;
+    renderer.setClearColor(bgColor, theme === 'light' ? 1 : 0);
     mountRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
@@ -274,7 +278,7 @@ const Atom3D = ({ protons, neutrons, electrons }) => {
         renderer.dispose();
       }
     };
-  }, [protons, neutrons, electrons, geometries, materials]);
+  }, [protons, neutrons, electrons, geometries, materials, theme]);
 
   return (
     <div 
