@@ -197,7 +197,6 @@ const PeriodicTable = ({ onElementSelect }) => {
               onClick={() => {
                 setSelectedElement(element);
                 addToRecentlyViewed(element.atomic_number);
-                window.location.hash = `element/${element.atomic_number}`;
               }}
               onContextMenu={(e) => {
                 e.preventDefault();
@@ -241,7 +240,6 @@ const PeriodicTable = ({ onElementSelect }) => {
                     onClick={() => {
                       setSelectedElement(element);
                       addToRecentlyViewed(element.atomic_number);
-                      window.location.hash = `element/${element.atomic_number}`;
                     }}
                     className={`px-3 py-2 rounded-lg border-2 transition-all ${
                       categoryColors[element.category]
