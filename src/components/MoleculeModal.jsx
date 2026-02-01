@@ -62,11 +62,11 @@ const MoleculeModal = ({ molecule, onClose }) => {
               transition={{ delay: 0.2 }}
               className="bg-background/30 rounded-xl p-6 mb-6 border border-primary/20"
             >
-              <div className="flex items-center justify-center min-h-[280px]">
+              <div className="flex items-center justify-center min-h-[400px]">
                 <Molecule2D
                   smiles={molecule.smiles}
-                  width={280}
-                  height={280}
+                  width={Math.min(420, 200 + molecule.smiles.length * 2)}
+                  height={Math.min(420, 200 + molecule.smiles.length * 2)}
                   className="w-full"
                 />
               </div>

@@ -1,38 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import SmilesDrawer from 'smiles-drawer';
 import { useTheme } from '../contexts/ThemeContext';
+import { useRDKit } from '../contexts/RDKitContext';
 
-// Theme-tilpassede farger: primary #9f55ff, muted gray #a0a0a0
-const KJEMI_THEMES = {
+// Lærebok-stil: rød karbonskelett, svart heteroatomer (O, N, H) på lys grå bakgrunn
+const THEME_COLORS = {
   dark: {
-    C: '#a0a0a0',
-    O: '#b366ff',
-    N: '#b366ff',
-    F: '#9f55ff',
-    CL: '#9f55ff',
-    BR: '#9f55ff',
-    I: '#9f55ff',
-    P: '#b366ff',
-    S: '#b366ff',
-    B: '#a0a0a0',
-    SI: '#a0a0a0',
-    H: '#888888',
-    BACKGROUND: '#1A1A2B',
+    background: [0.1, 0.1, 0.17],
   },
   light: {
-    C: '#666666',
-    O: '#7c3aed',
-    N: '#7c3aed',
-    F: '#6d28d9',
-    CL: '#6d28d9',
-    BR: '#6d28d9',
-    I: '#6d28d9',
-    P: '#7c3aed',
-    S: '#7c3aed',
-    B: '#666666',
-    SI: '#666666',
-    H: '#555555',
-    BACKGROUND: '#ffffff',
+    background: [0.95, 0.96, 0.97],
   },
 };
 
@@ -40,17 +17,64 @@ const Molecule2D = ({ smiles, width = 200, height = 200, className = '' }) => {
   const containerRef = useRef(null);
   const [error, setError] = useState(null);
   const { theme } = useTheme();
+  const { rdkit } = useRDKit();
 
   useEffect(() => {
     if (!smiles || !containerRef.current) return;
 
     setError(null);
-    const themeName = theme === 'dark' ? 'kjemi-dark' : 'kjemi-light';
 
+    // RDKit: korrekt stereokjemi, wedge/dashed bonds, eksplisitte H
+    if (rdkit) {
+      try {
+        const mol = rdkit.get_mol(smiles);
+        if (mol) {
+          const colors = THEME_COLORS[theme] || THEME_COLORS.light;
+          const details = {
+            width: Math.round(width),
+            height: Math.round(height),
+            backgroundColour: colors.background,
+            bondLineWidth: 2,
+            addStereoAnnotation: true,
+            explicitMethyl: true,
+            symbolColour: theme === 'light' ? [0, 0, 0] : [0.9, 0.9, 0.9],
+          };
+          const svgStr = mol.get_svg_with_highlights(JSON.stringify(details));
+          mol.delete();
+          if (svgStr && containerRef.current) {
+            containerRef.current.innerHTML = svgStr;
+            const svg = containerRef.current.querySelector('svg');
+            if (svg) {
+              svg.setAttribute('class', 'molecule-2d-svg');
+              svg.style.maxWidth = '100%';
+              svg.style.height = 'auto';
+              if (theme === 'light') {
+                svg.querySelectorAll('path, line').forEach((el) => {
+                  const stroke = el.getAttribute('stroke');
+                  if (stroke && stroke !== 'none') {
+                    el.setAttribute('stroke', '#c62828');
+                  }
+                });
+                svg.querySelectorAll('text').forEach((el) => {
+                  el.setAttribute('fill', '#000');
+                });
+              }
+            }
+          }
+        }
+      } catch (err) {
+        setError(err?.message || 'Kunne ikke tegne molekylet');
+        if (containerRef.current) containerRef.current.innerHTML = '';
+      }
+      return;
+    }
+
+    // Fallback: smiles-drawer
+    const themeName = theme === 'dark' ? 'kjemi-dark' : 'kjemi-light';
     const options = {
       width,
       height,
-      bondThickness: 1.0,
+      bondThickness: 1.5,
       bondLength: 25,
       shortBondLength: 0.85,
       bondSpacing: 5,
@@ -60,9 +84,20 @@ const Molecule2D = ({ smiles, width = 200, height = 200, className = '' }) => {
       fontSizeSmall: 8,
       padding: 15,
       compactDrawing: true,
+      isomeric: true,
       themes: {
-        'kjemi-dark': KJEMI_THEMES.dark,
-        'kjemi-light': KJEMI_THEMES.light,
+        'kjemi-dark': {
+          C: '#a0a0a0', O: '#b366ff', N: '#b366ff', H: '#888888',
+          F: '#9f55ff', CL: '#9f55ff', BR: '#9f55ff', I: '#9f55ff',
+          P: '#b366ff', S: '#b366ff', B: '#a0a0a0', SI: '#a0a0a0',
+          BACKGROUND: '#1A1A2B',
+        },
+        'kjemi-light': {
+          C: '#222', O: '#222', N: '#222', H: '#333',
+          F: '#222', CL: '#222', BR: '#222', I: '#222',
+          P: '#222', S: '#222', B: '#222', SI: '#222',
+          BACKGROUND: '#ffffff',
+        },
       },
     };
 
@@ -81,17 +116,13 @@ const Molecule2D = ({ smiles, width = 200, height = 200, className = '' }) => {
         }
       }, (err) => {
         setError(err?.message || 'Kunne ikke tegne molekylet');
-        if (containerRef.current) {
-          containerRef.current.innerHTML = '';
-        }
+        if (containerRef.current) containerRef.current.innerHTML = '';
       });
     } catch (err) {
       setError(err?.message || 'Kunne ikke tegne molekylet');
-      if (containerRef.current) {
-        containerRef.current.innerHTML = '';
-      }
+      if (containerRef.current) containerRef.current.innerHTML = '';
     }
-  }, [smiles, width, height, theme]);
+  }, [smiles, width, height, theme, rdkit]);
 
   if (error) {
     return (

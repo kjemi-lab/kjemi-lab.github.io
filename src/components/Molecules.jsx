@@ -97,7 +97,7 @@ const Molecules = () => {
       {/* Molecule Grid */}
       <div className="max-w-7xl mx-auto">
         <motion.div
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-5"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
@@ -114,11 +114,11 @@ const Molecules = () => {
                 className="bg-surface/50 border border-primary/20 rounded-xl p-4 cursor-pointer transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:scale-[1.02]"
                 onClick={() => setSelectedMolecule(molecule)}
               >
-                <div className="aspect-square flex items-center justify-center mb-3 bg-background/30 rounded-lg overflow-hidden min-h-[120px]">
+                <div className="aspect-square flex items-center justify-center mb-3 bg-background/30 rounded-lg overflow-hidden min-h-[180px]">
                   <Molecule2D
                     smiles={molecule.smiles}
-                    width={140}
-                    height={140}
+                    width={190}
+                    height={190}
                   />
                 </div>
                 <h3 className="font-semibold text-white text-sm truncate">

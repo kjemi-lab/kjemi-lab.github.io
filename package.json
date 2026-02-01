@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "kjemi-lab",
   "version": "1.0.0",
   "description": "En komplett periodisk tabell applikasjon med 3D atom-visualisering",
