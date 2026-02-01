@@ -39,7 +39,7 @@ const ElementModal = ({ element, onClose }) => {
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          className="relative w-full max-w-sm sm:max-w-2xl md:max-w-4xl lg:max-w-6xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto bg-surface rounded-xl sm:rounded-2xl border border-primary/20 shadow-2xl"
+          className="relative w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[80vw] max-w-6xl h-[95vh] overflow-y-auto bg-surface rounded-xl sm:rounded-2xl border border-primary/20 shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Action buttons */}
@@ -101,48 +101,48 @@ const ElementModal = ({ element, onClose }) => {
               </div>
             </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
               {/* Left column - Properties */}
               <motion.div 
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
-                className="space-y-6"
+                className="space-y-4 sm:space-y-6"
               >
                 {/* Basic properties */}
-                <div className="bg-surface/50 rounded-xl p-6 border border-primary/20">
-                  <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <Atom className="w-5 h-5 text-primary" />
+                <div className="bg-surface/50 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-primary/20">
+                  <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 flex items-center gap-2">
+                    <Atom className="w-4 sm:w-5 h-4 sm:h-5 text-primary" />
                     Grunnleggende egenskaper
                   </h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-3 bg-neon-red/10 rounded-lg border border-neon-red/30">
-                      <div className="text-2xl font-bold text-neon-red">{element.protons}</div>
-                      <div className="text-sm text-gray-400">Protoner</div>
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                    <div className="text-center p-2 sm:p-3 bg-neon-red/10 rounded-lg border border-neon-red/30">
+                      <div className="text-lg sm:text-2xl font-bold text-neon-red">{element.protons}</div>
+                      <div className="text-xs sm:text-sm text-gray-400">Protoner</div>
                     </div>
-                    <div className="text-center p-3 bg-neon-blue/10 rounded-lg border border-neon-blue/30">
-                      <div className="text-2xl font-bold text-neon-blue">{element.neutrons}</div>
-                      <div className="text-sm text-gray-400">Nøytroner</div>
+                    <div className="text-center p-2 sm:p-3 bg-neon-blue/10 rounded-lg border border-neon-blue/30">
+                      <div className="text-lg sm:text-2xl font-bold text-neon-blue">{element.neutrons}</div>
+                      <div className="text-xs sm:text-sm text-gray-400">Nøytroner</div>
                     </div>
-                    <div className="text-center p-3 bg-neon-yellow/10 rounded-lg border border-neon-yellow/30">
-                      <div className="text-2xl font-bold text-neon-yellow">{element.electrons}</div>
-                      <div className="text-sm text-gray-400">Elektroner</div>
+                    <div className="text-center p-2 sm:p-3 bg-neon-yellow/10 rounded-lg border border-neon-yellow/30">
+                      <div className="text-lg sm:text-2xl font-bold text-neon-yellow">{element.electrons}</div>
+                      <div className="text-xs sm:text-sm text-gray-400">Elektroner</div>
                     </div>
-                    <div className="text-center p-3 bg-primary/10 rounded-lg border border-primary/30">
-                      <div className="text-2xl font-bold text-primary">{element.atomic_mass}</div>
-                      <div className="text-sm text-gray-400">Atommasse (u)</div>
+                    <div className="text-center p-2 sm:p-3 bg-primary/10 rounded-lg border border-primary/30">
+                      <div className="text-lg sm:text-2xl font-bold text-primary">{element.atomic_mass}</div>
+                      <div className="text-xs sm:text-sm text-gray-400">Atommasse (u)</div>
                     </div>
                   </div>
                 </div>
 
                 {/* Physical properties */}
-                <div className="bg-surface/50 rounded-xl p-6 border border-primary/20">
-                  <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <Thermometer className="w-5 h-5 text-primary" />
+                <div className="bg-surface/50 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-primary/20">
+                  <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 flex items-center gap-2">
+                    <Thermometer className="w-4 sm:w-5 h-4 sm:h-5 text-primary" />
                     Fysiske egenskaper
                   </h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
+                  <div className="space-y-2 sm:space-y-3">
+                    <div className="flex justify-between items-center text-xs sm:text-base">
                       <span className="text-gray-400">Smeltepunkt:</span>
                       <span className="font-medium">
                         {element.melting_point ? `${element.melting_point}°C` : 'Ukjent'}
